@@ -71,19 +71,20 @@ def main():
         while not is_valid_move(board, move):
             move = np.random.choice(4, p=[.4, .4, .1, .1])
 
-        console.print("chose move: ", moves[move])
-        board, score = make_move(board, score, move)
-        board = add_value(board)
-        print_board(board, score)
-        # with console.capture() as capture:
-        #     console.print("chose move: ", moves[move])
-        #     board, score = make_move(board, score, move)
-        #     board = add_value(board)
-        #     print_board(board, score)
-        #
-        # print(capture.get())
+        # console.print("chose move: ", moves[move])
+        # board, score = make_move(board, score, move)
+        # board = add_value(board)
+        # print_board(board, score)
+        with console.capture() as capture:
+            console.print("chose move: ", moves[move])
+            board, score = make_move(board, score, move)
+            board = add_value(board)
+            print_board(board, score)
 
-        time.sleep(1)
+        # print(capture.get().strip("\n"))
+        for line in capture.get().split("\n"):
+            print(line)
+        time.sleep(0.5)
 
     end_time = time.time()
     print(f'total time is: {end_time - start_time} seconds')
