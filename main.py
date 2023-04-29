@@ -1,7 +1,7 @@
 import math
 import random
 # import keyboard   requires root access, not pog
-from sshkeyboard import listen_keyboard, stop_listening
+# from sshkeyboard import listen_keyboard, stop_listening
 import time
 import rich
 from rich.console import Console
@@ -12,6 +12,9 @@ from rich.text import Text
 from rich import box
 
 from pyfiglet import Figlet
+
+import numpy as np
+from numpy import ndarray
 
 
 last_key: str
@@ -48,12 +51,13 @@ def main():
         print(value)
 
     # initialize the board
-    board: list[list[int]] = list()
-    for i in range(4):
-        board.append(list())
-        for j in range(4):
-            board[i].append(0)
-    print(board)
+    # board: list[list[int]] = list()
+    # for i in range(4):
+    #     board.append(list())
+    #     for j in range(4):
+    #         board[i].append(0)
+    # print(board)
+    board: ndarray[int, ...] = np.zeros((4,4), dtype=int)
 
     # randomly assign two spots on the board with the starting values
     cords1: tuple[int, int] = (random.randint(0, 3), random.randint(0, 3))
