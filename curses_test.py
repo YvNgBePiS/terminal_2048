@@ -41,35 +41,35 @@ def main():
     #     screen.clear()
     #     screen.move(0, 0)
 
+    for i in range(10):
+        console = Console(file=io.StringIO())
+        table = Table(
+            title="My 4x4 Table",
+            style="bright_white",
+            caption_style="bright_white",
+            box=box.ROUNDED,
+            padding=0,
+            show_header=False,
+            show_footer=False,
+            show_lines=True
+        )
 
-    console = Console(file=io.StringIO())
-    table = Table(
-        title="My 4x4 Table",
-        style="bright_white",
-        caption_style="bright_white",
-        box=box.ROUNDED,
-        padding=0,
-        show_header=False,
-        show_footer=False,
-        show_lines=True
-    )
+        # Add four columns with a minimum width of 14 characters
+        for i in range(4):
+            table.add_column(justify="center", min_width=14)
 
-    # Add four columns with a minimum width of 14 characters
-    for i in range(4):
-        table.add_column(justify="center", min_width=14)
-
-    # Add four rows to the table
-    for i in range(4):
-        row = table.add_row("'   _____ __ __\n  / ___// // /\n / __ \\/ // /_\n/ /_/ /__  __/\n\\____/  /_/   \n              \n'", "", "", "")
-        # for cell in row.cells:
-        #     cell.min_height = 5
-    # Print the table
-    console.print(table)
-    output = console.file.getvalue()
-    screen.addstr(f"size of output: {len(output)}")
-    screen.addstr(output)
-    screen.refresh()
-    time.sleep(5)
+        # Add four rows to the table
+        for i in range(4):
+            row = table.add_row("'   _____ __ __\n  / ___// // /\n / __ \\/ // /_\n/ /_/ /__  __/\n\\____/  /_/   \n              \n'", "", "", "")
+            # for cell in row.cells:
+            #     cell.min_height = 5
+        # Print the table
+        console.print(table)
+        output = console.file.getvalue()
+        screen.addstr(f"size of output: {len(output)}")
+        screen.addstr(output)
+        screen.refresh()
+        time.sleep(5)
 
 
 

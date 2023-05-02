@@ -59,9 +59,9 @@ def main():
     board = np.zeros((4, 4), dtype=int)
     score = 0
 
-    screen = curses.initscr()
-    curses.noecho()  # turn off key echoing
-    curses.cbreak()  # respond to keys immediately (don't wait for Enter)
+    # screen = curses.initscr()
+    # curses.noecho()  # turn off key echoing
+    # curses.cbreak()  # respond to keys immediately (don't wait for Enter)
 
     board = add_value(board)
     print_board(board, score)
@@ -89,9 +89,9 @@ def main():
     print(f'total time is: {end_time - start_time} seconds')
 
     # clean up curses before exiting
-    curses.nocbreak()
-    curses.echo()
-    curses.endwin()
+    # curses.nocbreak()
+    # curses.echo()
+    # curses.endwin()
 
 
 def print_board(board: ndarray[int, ...], score: int):
