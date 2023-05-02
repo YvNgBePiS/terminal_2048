@@ -19,7 +19,8 @@ import curses
 
 # test = "/ /_/ /__  __/"
 # temp = "              "
-empty_cell = "              \n              \n              \n              \n              \n"
+empty_cell = "              \n              \n              \n" \
+             "              \n              \n"
 console: Console
 color_lookup: dict[int, str] = {
     0: "grey93",
@@ -50,7 +51,8 @@ def main():
     # symbol_lookup[0] = f.renderText(str(0))
     symbol_lookup[0] = empty_cell
     for i in range(1, 12):
-        symbol_lookup[int(math.pow(2, i))] = f.renderText(str(int(math.pow(2, i))))
+        symbol_lookup[int(math.pow(2, i))] = \
+            f.renderText(str(int(math.pow(2, i))))
 
     # for key, value in symbol_lookup.items():
     #     print(key, "\n", value, "\n\n")
@@ -65,7 +67,7 @@ def main():
 
     board = add_value(board)
     print_board(board, score)
-    time.sleep(5)
+    #time.sleep(5)
     while has_valid_move(board):
         move = np.random.choice(4, p=[.4, .4, .1, .1])
         while not is_valid_move(board, move):
@@ -96,9 +98,11 @@ def main():
 
 def print_board(board: ndarray[int, ...], score: int):
     # input_console.clear()
-    # input_console.rule('[bright_white]Play 2048', align='center', style='green_yellow')
+    # input_console.rule('[bright_white]Play 2048', align='center',
+    # style='green_yellow')
     # input_console.print()
-    # input_console.print('----------------------------', style='bright_white', justify='center')
+    # input_console.print('----------------------------', style='bright_white',
+    # justify='center')
     # input_console.print('|')
     start_time = time.time()
 
@@ -115,14 +119,19 @@ def print_board(board: ndarray[int, ...], score: int):
         padding=0,
         show_header=False,
         show_footer=False,
-        show_lines=True
+        show_lines=True,
+        width=100
     )
+
+    for i in range(4):
+        table.add_column(width=25)
 
     for i in range(board.shape[0]):
         cells = []
         for j in range(board.shape[1]):
             cell_text = None
-            # print("this is the symbol: ", board[i, j], " , as a string: ", str(board[i, j]), "\n")
+            # print("this is the symbol: ", board[i, j], " , as a string: ",
+            # str(board[i, j]), "\n")
             # print("this is the lookup: \n")
             # print(symbol_lookup[board[i, j]])
             cell_text = Text(symbol_lookup[board[i, j]], justify="center")
@@ -147,7 +156,8 @@ def is_valid_move(board: ndarray[int, ...], direction: int) -> bool:
 
 
 def has_valid_move(board: ndarray[int, ...]) -> bool:
-    # return is_valid_move(board, 0) or is_valid_move(board, 1) or is_valid_move(board, 2) or is_valid_move(board, 3)
+    # return is_valid_move(board, 0) or is_valid_move(board, 1)
+    # or is_valid_move(board, 2) or is_valid_move(board, 3)
     return any(is_valid_move(board, direction) for direction in range(4))
 
 
@@ -161,7 +171,8 @@ def add_value(board: ndarray[int, ...]) -> ndarray[int, ...]:
     return new_board
 
 
-def make_move(board: ndarray[int, ...], current_score: int, direction: int) -> tuple[ndarray[int, ...], int]:
+def make_move(board: ndarray[int, ...], current_score: int, direction: int) ->\
+        tuple[ndarray[int, ...], int]:
     # 0: up, 1: right, 2: down, 3: left
     new_board = np.copy(board)
     new_board = np.rot90(new_board, k=direction)
@@ -177,7 +188,8 @@ def shift(board: ndarray[int, ...]) -> ndarray[int, ...]:
         top_row = 0  # stores the row of the highest zero element
         for row in range(board.shape[0]):
             if new_board[row, column] != 0:
-                new_board[(top_row, row), (column, column)] = new_board[(row, top_row), (column, column)]
+                new_board[(top_row, row), (column, column)] = \
+                    new_board[(row, top_row), (column, column)]
                 top_row += 1
     return new_board
 
@@ -187,11 +199,13 @@ def join(board: ndarray[int, ...]) -> tuple[ndarray[int, ...], int]:
     score_change = 0
     for column in range(board.shape[1]):
         for row in range(board.shape[0] - 1):
-            if new_board[row, column] == new_board[row + 1, column] and new_board[row, column] != 0:
+            if new_board[row, column] == new_board[row + 1, column] and \
+                    new_board[row, column] != 0:
                 new_board[row, column] += new_board[row + 1, column]
                 score_change += new_board[row, column]
                 new_board[row + 1, column] = 0
-                new_board[(row + 1):, column] = np.roll(new_board[(row + 1):, column], -1)
+                new_board[(row + 1):, column] = \
+                    np.roll(new_board[(row + 1):, column], -1)
     return new_board, score_change
 
 
@@ -230,7 +244,7 @@ while has_valid_move(board):
     console.print(table)"""
 
 if __name__ == "__main__":
-    main();
+    main()
 
 """
     color_lookup: dict[int, str] = {
