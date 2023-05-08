@@ -19,27 +19,43 @@ from rich import box
 
 from board_functions import *
 
-
 empty_cell = "              \n              \n              \n" \
              "              \n              \n"
+# color_lookup: dict[int, str] = {
+#     0: "grey93",
+#     2: "grey93",
+#     4: "grey78",
+#     8: "pale_green3",
+#     16: "yellow4",
+#     32: "chartreuse4",
+#     64: "dark_goldenrod",
+#     128: "green_yellow",
+#     256: "medium_spring_green",
+#     512:"cyan2",
+#     1024:"cyan1",
+#     2048:"bright_cyan"
+# }
+
 color_lookup: dict[int, str] = {
     0: "grey93",
-    2: "grey93",
-    4: "grey78",
-    8: "pale_green3",
-    16: "yellow4",
-    32: "chartreuse4",
-    64: "dark_goldenrod",
-    128: "green_yellow",
-    256: "medium_spring_green",
-    512:"cyan2",
-    1024:"cyan1",
-    2048:"bright_cyan"
+    2: "dark_violet",
+    4: "blue_violet",
+    8: "blue1",
+    16: "dodger_blue1",
+    32: "pale_turquoise1",
+    64: "green4",
+    128: "chartreuse1",
+    256: "yellow1",
+    512: "dark_orange",
+    1024: "red1",
+    2048: "orchid1"
 }
+
 symbol_lookup: dict[int, str] = dict()
 board: ndarray[int, ...] = np.zeros((4, 4), dtype=int)
 score: int
 console: Console
+
 
 def main():
     global symbol_lookup
@@ -67,23 +83,25 @@ def main():
     # layout = Window(content=control)
     # control = FormattedTextControl(text=get_board_str(board, score))
     # window = Window(content=control)
-    text_area = TextArea(text=get_board_str(board, score), wrap_lines=False)
+    welcome_text = f.renderText("Welcome") + "\n\n press any of WASD to begin\n"
+    exit_text = f.renderText("Game Over")
+    # text_area = TextArea(text=get_board_str(board, score), wrap_lines=False)
+    text_area = TextArea(text=welcome_text, wrap_lines=False)
     root_container = VSplit([text_area])
     layout = Layout(root_container)
 
-
     def update_board(key: str):
         key_to_direction_index = {"w": 0, "d": 1, "s": 2, "a": 3}
-        key_to_direction_str = {"w": "up", "d":"right", "s":"down", "a":"left"}
+        key_to_direction_str = {"w": "up", "d": "right", "s": "down", "a": "left"}
         global board
         global score
         if is_valid_move(board, key_to_direction_index[key]):
             board, score = make_move(board, score, key_to_direction_index[key])
             board = add_value(board)
-            #text_area.text = get_board_str(board, score)
+            # text_area.text = get_board_str(board, score)
             print_board(board, score)
         else:
-            #text_area.text = get_board_str(board, score, message=f"{key_to_direction_str[key]} is not a valid move")
+            # text_area.text = get_board_str(board, score, message=f"{key_to_direction_str[key]} is not a valid move")
             print_board(board, score, message=f"{key_to_direction_str[key]} is not a valid move")
 
     bindings = KeyBindings()
@@ -99,12 +117,32 @@ def main():
             print_board(board, score,
                         message="\nNo more moves\nGame Over :(\nPress q to "
                                 "exit")
+            # global score
+            # nonlocal exit_text
+            # nonlocal text_area
+            # text_area.text = "\n" + exit_text + f"\n\n final score: {score}\n"
+            # print_board(board, score,
+            #             message=exit_text)
             event.app.exit()
             quit()
 
     @bindings.add("q")
     def exit_(event):
+        global score
+        nonlocal exit_text
+        nonlocal text_area
+        text_area.text = "\n" + exit_text + f"\n\n final score: {score}\n"
         event.app.exit()
+
+    @bindings.add("e")
+    def cheat_code_(event):
+        global board
+        global score
+        board = np.array([[1024, 512, 256, 128],
+                          [8, 16, 32, 64],
+                          [2, 0, 0, 0],
+                          [0, 0, 0, 0]])
+        print_board(board, score)
 
     # Create the application instance with the layout and key bindings.
     app = Application(layout=layout, key_bindings=bindings)
@@ -113,7 +151,7 @@ def main():
     app.run()
 
 
-def get_board_str(board: ndarray[int, ...], score: int, message = None) -> str:
+def get_board_str(board: ndarray[int, ...], score: int, message=None) -> str:
     global symbol_lookup
     global color_lookup
 
@@ -157,7 +195,8 @@ def get_board_str(board: ndarray[int, ...], score: int, message = None) -> str:
         temp_console.print(table)
     return capture.get()
 
-def print_board(board: ndarray[int, ...], score: int, message = None) -> str:
+
+def print_board(board: ndarray[int, ...], score: int, message=None) -> str:
     global symbol_lookup
     global color_lookup
 
@@ -175,11 +214,11 @@ def print_board(board: ndarray[int, ...], score: int, message = None) -> str:
         show_header=False,
         show_footer=False,
         show_lines=True,
-        width=100
+        width=112
     )
 
     for i in range(4):
-        table.add_column(width=25)
+        table.add_column(width=28)
 
     for i in range(board.shape[0]):
         cells = []
@@ -199,6 +238,7 @@ def print_board(board: ndarray[int, ...], score: int, message = None) -> str:
     # with temp_console.capture() as capture:
     #     temp_console.print(table)
     # return capture.get()
+
 
 if __name__ == "__main__":
     main()
