@@ -78,11 +78,6 @@ def main():
     global console
     console = Console()
 
-    # control = FormattedTextControl(get_board_str(board, score))
-    # control = TextArea(get_board_str(board, score))
-    # layout = Window(content=control)
-    # control = FormattedTextControl(text=get_board_str(board, score))
-    # window = Window(content=control)
     welcome_text = f.renderText("Welcome") + "\n\n press any of WASD to begin\n"
     exit_text = f.renderText("Game Over")
     # text_area = TextArea(text=get_board_str(board, score), wrap_lines=False)
@@ -118,13 +113,13 @@ def main():
                         message="\nNo more moves\nGame Over :(\nPress q to "
                                 "exit")
             # global score
-            # nonlocal exit_text
-            # nonlocal text_area
-            # text_area.text = "\n" + exit_text + f"\n\n final score: {score}\n"
+            nonlocal exit_text
+            nonlocal text_area
+            text_area.text = "\n" + exit_text + f"\n\n final score: {score}\n"
             # print_board(board, score,
             #             message=exit_text)
             event.app.exit()
-            quit()
+            # quit()
 
     @bindings.add("q")
     def exit_(event):
@@ -214,11 +209,11 @@ def print_board(board: ndarray[int, ...], score: int, message=None) -> str:
         show_header=False,
         show_footer=False,
         show_lines=True,
-        width=112
+        width=116
     )
 
     for i in range(4):
-        table.add_column(width=28)
+        table.add_column(width=29)
 
     for i in range(board.shape[0]):
         cells = []
@@ -232,12 +227,6 @@ def print_board(board: ndarray[int, ...], score: int, message=None) -> str:
     global console
     console.clear()
     console.print(table)
-
-    # buffer = io.StringIO()
-    # temp_console = Console(file=buffer)
-    # with temp_console.capture() as capture:
-    #     temp_console.print(table)
-    # return capture.get()
 
 
 if __name__ == "__main__":
