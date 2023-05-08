@@ -87,6 +87,7 @@ def main():
             print_board(board, score, message=f"{key_to_direction_str[key]} is not a valid move")
 
     bindings = KeyBindings()
+
     @bindings.add("w")
     @bindings.add("d")
     @bindings.add("s")
@@ -95,7 +96,11 @@ def main():
         update_board(event.key_sequence[0].key)
         global board
         if not has_valid_move(board):
+            print_board(board, score,
+                        message="\nNo more moves\nGame Over :(\nPress q to "
+                                "exit")
             event.app.exit()
+            quit()
 
     @bindings.add("q")
     def exit_(event):
@@ -117,7 +122,7 @@ def get_board_str(board: ndarray[int, ...], score: int, message = None) -> str:
         caption += ", " + message
 
     table = Table(
-        title=f"Play 2048",
+        title=f"Play 2048\nWASD to move, q to quit",
         caption=caption,
         style="bright_white",
         caption_style="bright_white",
@@ -161,7 +166,7 @@ def print_board(board: ndarray[int, ...], score: int, message = None) -> str:
         caption += ", " + message
 
     table = Table(
-        title=f"Play 2048",
+        title=f"Play 2048\nWASD to move, q to quit",
         caption=caption,
         style="bright_white",
         caption_style="bright_white",
