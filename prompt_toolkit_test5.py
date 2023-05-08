@@ -39,12 +39,13 @@ color_lookup: dict[int, str] = {
 symbol_lookup: dict[int, str] = dict()
 board: ndarray[int, ...] = np.zeros((4, 4), dtype=int)
 score: int
+console: Console
 
 def main():
     global symbol_lookup
     # initialize the symbol lookup
-    # f = Figlet(font='slant')
-    f = Figlet(font='avatar')
+    f = Figlet(font='slant')
+    # f = Figlet(font='avatar')
     # f = Figlet(font='starwars')
     symbol_lookup = dict()
     symbol_lookup[0] = empty_cell
@@ -57,6 +58,9 @@ def main():
 
     global score
     score = 0
+
+    global console
+    console = Console()
 
     # control = FormattedTextControl(get_board_str(board, score))
     # control = TextArea(get_board_str(board, score))
@@ -76,9 +80,11 @@ def main():
         if is_valid_move(board, key_to_direction_index[key]):
             board, score = make_move(board, score, key_to_direction_index[key])
             board = add_value(board)
-            text_area.text = get_board_str(board, score)
+            #text_area.text = get_board_str(board, score)
+            print_board(board, score)
         else:
-            text_area.text = get_board_str(board, score, message=f"{key_to_direction_str[key]} is not a valid move")
+            #text_area.text = get_board_str(board, score, message=f"{key_to_direction_str[key]} is not a valid move")
+            print_board(board, score, message=f"{key_to_direction_str[key]} is not a valid move")
 
     bindings = KeyBindings()
     @bindings.add("w")
@@ -145,6 +151,49 @@ def get_board_str(board: ndarray[int, ...], score: int, message = None) -> str:
     with temp_console.capture() as capture:
         temp_console.print(table)
     return capture.get()
+
+def print_board(board: ndarray[int, ...], score: int, message = None) -> str:
+    global symbol_lookup
+    global color_lookup
+
+    caption = f"Your score: {str(score)}"
+    if message is not None:
+        caption += ", " + message
+
+    table = Table(
+        title=f"Play 2048",
+        caption=caption,
+        style="bright_white",
+        caption_style="bright_white",
+        box=box.ROUNDED,
+        padding=0,
+        show_header=False,
+        show_footer=False,
+        show_lines=True,
+        width=100
+    )
+
+    for i in range(4):
+        table.add_column(width=25)
+
+    for i in range(board.shape[0]):
+        cells = []
+        for j in range(board.shape[1]):
+            cell_text = None
+            cell_text = Text(symbol_lookup[board[i, j]], justify="center")
+            cell_text.stylize(color_lookup[board[i, j]])
+            cells.append(cell_text)
+        table.add_row(*cells)
+
+    global console
+    console.clear()
+    console.print(table)
+
+    # buffer = io.StringIO()
+    # temp_console = Console(file=buffer)
+    # with temp_console.capture() as capture:
+    #     temp_console.print(table)
+    # return capture.get()
 
 if __name__ == "__main__":
     main()
